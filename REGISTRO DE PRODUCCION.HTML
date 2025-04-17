@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registro de Producción</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    input, select, button { margin: 5px; padding: 5px; }
+    table { border-collapse: collapse; margin-top: 20px; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 5px; text-align: center; }
+  </style>
+</head>
+<body>
+  <h2>Registro de Producción</h2>
+
+  <form id="registroForm">
+    <input type="date" placeholder="Fecha de inicio" id="fecha" required>
+    <input type="time" placeholder="Hora de inicio" id="hora" required>
+    <input type="text" placeholder="Alistamiento" id="alistamiento">
+
+    <select id="proceso">
+      <option value="">Selecciona Proceso</option>
+      <option value="REVISION">REVISION</option>
+      <option value="PESADO">PESADO</option>
+      <option value="EMBALAJE">EMBALAJE</option>
+      <option value="ETIQUETADO">ETIQUETADO</option>
+      <option value="COMPLETO">COMPLETO</option>
+    </select>
+
+    <select id="responsables">
+      <option value="">Selecciona Responsable</option>
+      <option value="MARITZA">MARITZA</option>
+      <option value="DELVIN">DELVIN</option>
+      <option value="APOYO 1">APOYO 1</option>
+      <option value="APOYO 2">APOYO 2</option>
+    </select>
+
+    <select id="linea">
+      <option value="">Selecciona Línea</option>
+      <option value="hogar">hogar</option>
+      <option value="joyería">joyería</option>
+      <option value="ropa">ropa</option>
+      <option value="fragancia">fragancia</option>
+      <option value="loreal">loreal</option>
+      <option value="MN">MN</option>
+    </select>
+
+    <input type="text" placeholder="SKU" id="sku">
+    <input type="number" placeholder="Cantidad" id="cantidad">
+    <input type="text" placeholder="Campaña" id="campana">
+    <input type="text" placeholder="Tipo de envío" id="tipo_envio">
+    <input type="text" placeholder="País" id="pais">
+    <input type="text" placeholder="Observación" id="observacion">
+    <button type="button" onclick="agregarRegistro()">Agregar</button>
+    <button type="button" onclick="exportarExcel()">Descargar Excel</button>
+  </form>
+
+  <table id="tabla">
+    <thead>
+      <tr>
+        <th>Fecha</th><th>Hora</th><th>Alistamiento</th><th>Proceso</th>
+        <th>Responsables</th><th>Línea</th><th>SKU</th>
+        <th>Cantidad</th><th>Campaña</th><th>Tipo de Envío</th>
+        <th>País</th><th>Observación</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    function agregarRegistro() {
+      const campos = ['fecha', 'hora', 'alistamiento', 'proceso', 'responsables', 'linea', 'sku', 'cantidad', 'campana', 'tipo_envio', 'pais', 'observacion'];
+      const fila = document.createElement('tr');
+      campos.forEach(id => {
+        const valor = document.getElementById(id).value;
+        const celda = document.createElement('td');
+        celda.textContent = valor;
+        fila.appendChild(celda);
+      });
+      document.querySelector('#tabla tbody').appendChild(fila);
+      document.getElementById('registroForm').reset();
+    }
+
+    function exportarExcel() {
+      const tabla = document.getElementById('tabla');
+      const wb = XLSX.utils.table_to_book(tabla, {sheet: "Produccion"});
+      XLSX.writeFile(wb, "registro_produccion.xlsx");
+    }
+  </script>
+</body>
+</html>
